@@ -8,28 +8,95 @@
 import XCTest
 @testable import ExchangeCurrency
 
-final class ExchangeCurrencyTests: XCTestCase {
+class CurrencyConverterViewModelTests: XCTestCase {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    var viewModel: CurrencyConverterViewModel!
+    var mockAPIService: MockCurrencyAPIService!
+    var mockPersistenceService: MockPersistenceService!
+    var mockRates: [String: Double]!
+
+    override func setUp() {
+        super.setUp()
+        mockAPIService = MockCurrencyAPIService()
+        mockPersistenceService = MockPersistenceService()
+        viewModel = CurrencyConverterViewModel(apiService: mockAPIService, persistenceService: mockPersistenceService)
+        mockRates = loadMockRatesFromJSON()
     }
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    override func tearDown() {
+        viewModel = nil
+        mockAPIService = nil
+        mockPersistenceService = nil
+        mockRates = nil
+        super.tearDown()
     }
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+    func testFetchExchangeRates_Success() {
+        mockAPIService.fetchExchangeRatesResult = .success(mockRates)
+
+        viewModel.fetchExchangeRates()
+
+        XCTAssertEqual(viewModel.exchangeRates, [:])
+        XCTAssertNil(viewModel.error)
+        XCTAssertFalse(viewModel.isLoading)
     }
 
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+    func testFetchExchangeRates_Failure() {
+        let mockError = APIError.networkError
+        mockAPIService.fetchExchangeRatesResult = .failure(mockError)
+
+        viewModel.fetchExchangeRates()
+
+        XCTAssertTrue(viewModel.exchangeRates.isEmpty)
+        XCTAssertFalse(viewModel.isLoading)
+    }
+
+    func testConvertAmount() {
+        viewModel.exchangeRates = mockRates
+
+        let convertedAmount = viewModel.convertAmount(100, fromCurrency: "USD", toCurrency: "EUR")
+        XCTAssertEqual(convertedAmount, 90.0041)
+    }
+
+    func testFilterAmountInput() {
+        let input = "100.50"
+        let filteredInput = viewModel.filterAmountInput(input)
+        XCTAssertEqual(filteredInput, "100.50")
+
+        let invalidInput = "100.50abc"
+        let filteredInvalidInput = viewModel.filterAmountInput(invalidInput)
+        XCTAssertEqual(filteredInvalidInput, "100.50")
+    }
+
+    func testSaveAndLoadExchangeRates() {
+        viewModel.exchangeRates = mockRates
+
+        viewModel.fetchExchangeRates()
+        XCTAssertEqual(mockPersistenceService.savedData, nil)
+
+        mockPersistenceService.loadDataResult = mockRates
+        let loadedRates = viewModel.persistenceService.loadExchangeRatesFromFile()
+        XCTAssertEqual(loadedRates, mockRates)
+    }
+    
+    func loadMockRatesFromJSON() -> [String: Double]? {
+        guard let url = Bundle(for: type(of: self)).url(forResource: "MockData", withExtension: "json") else {
+            XCTFail("Failed to locate MockData.json in the test bundle.")
+            return nil
+        }
+
+        do {
+            let data = try Data(contentsOf: url)
+            if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+               let rates = json["rates"] as? [String: Double] {
+                return rates
+            } else {
+                XCTFail("Failed to parse rates from JSON.")
+                return nil
+            }
+        } catch {
+            XCTFail("Error reading or parsing MockData.json: \(error)")
+            return nil
         }
     }
 
