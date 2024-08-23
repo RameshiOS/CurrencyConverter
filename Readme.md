@@ -1,4 +1,7 @@
 ExchangeCurrency App
+| Image 1  | image 2 | Image 3  | image 4 | 
+| ------------- | ------------- | ------------- | ------------- |
+| ![Simulator Screen Shot - iPhone 14 Pro Max - 2024-08-23 at 15 35 31](https://github.com/user-attachments/assets/9ecfdf27-2bf2-4bee-b299-6e6c30c76865) | ![Simulator Screen Shot - iPhone 14 Pro Max - 2024-08-23 at 15 30 27](https://github.com/user-attachments/assets/75023f4e-845d-4910-b46b-d71ed361fcce) | ![Simulator Screen Shot - iPhone 14 Pro Max - 2024-08-23 at 15 28 20](https://github.com/user-attachments/assets/8cff3a2d-f64c-4ef0-a806-e705231a6e1c) | ![Simulator Screen Shot - iPhone 14 Pro Max - 2024-08-23 at 15 28 07](https://github.com/user-attachments/assets/be5de7f8-7724-41d0-92a6-e63a38b155b5) |
 
 This is a currency converter APP based on SwiftUI. It follows the MVVM-Coordinator pattern, which incorporates an API to get immediate currency rates.
 
