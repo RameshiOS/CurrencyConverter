@@ -30,38 +30,39 @@ The project is intended to illustrate how to use the MVVM (Model-View-ViewModel)
 The app employs the MVVM-Coordinator pattern where data, UI and navigation  are separated.
 
 ## Model
-
-– The “Model” layer represents data and business logic, this includes structures/entities related to currencies in this app
+ 
+The “Model” layer represents data and business logic, this includes structures/entities related to currencies in this app
 
 ## ViewModel
 
-
-- The `ViewModel` layer acts as a mediator  between the View  and the Model.
+The `ViewModel` layer acts as a mediator  between the View  and the Model.
 
 ## View
 
-- The `View` layer consists of SwiftUI views that present  the UI.
+The `View` layer consists of SwiftUI views that present  the UI.
 
 ## Coordinator
 
-
-- The `Coordinator` pattern is used to manage navigation flow and dependencies. It initializes view models and passes them to the corresponding views. It also handles any navigation or flow control required between different views.
+The `Coordinator` pattern is used to manage navigation flow and dependencies. It initializes view models and passes them to the corresponding views. It also handles any navigation or flow control required between different views.
 
 ## CurrencyAPIService
-
 
 `CurrencyAPIService` is responsible for fetching exchange rates from an openexchangerates API.
 
 ## CurrencyConverterViewModel
-CurrencyConverterViewModel manages the logic for converting currency and interacts with the CurrencyAPIService to fetch rates.
+ 
+ CurrencyConverterViewModel manages the logic for converting currency and interacts with the CurrencyAPIService to fetch rates.
 
 ## Views
+
 The views are built using SwiftUI and rely on the CurrencyConverterViewModel.
 
 ## Coordinator
+
 The coordinator is responsible for initializing view models and handling navigation
 
 ## Testing
+
 The project includes unit tests for the CurrencyAPIService and CurrencyConverterViewModel.
 
 ## Installation
@@ -69,10 +70,12 @@ To run this project, follow these steps:
 
 Clone the repository
 
-Open the project in Xcode:
-Minumum Xcode version 14
-iOS 13.0+
+https://github.com/RameshiOS/CurrencyConverter.git
 
+Open the project in Xcode:
+- Minumum Xcode version 14
+- iOS 13.0+
+  
 Build and run the project using Xcode.
 
 ## Usage
@@ -80,3 +83,4 @@ Upon launching the app, the latest exchange rates are fetched from the API.
 Enter an amount and select the source and target currencies to see the converted value.
 The app dynamically updates the exchange rates and conversion results.
 For every 30 minutes it will automatcally call the openexchangerates API fetch the latest rates.
+
